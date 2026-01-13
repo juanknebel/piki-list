@@ -5,6 +5,15 @@ use crate::parser::Delimiter;
 use arboard::Clipboard;
 use tui_textarea::TextArea;
 
+/// Editor modes for Vim-like interaction
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Mode {
+    /// Navigate or use shortcuts without typing
+    Normal,
+    /// Type text into the active panel
+    Insert,
+}
+
 /// Main application state
 pub struct App {
     /// First list text area
@@ -41,6 +50,8 @@ pub struct App {
     pub diff_view_mode: usize,
     /// Clipboard instance for persistent selection on Linux
     pub clipboard: Option<Clipboard>,
+    /// Current editor mode
+    pub mode: Mode,
 }
 
 impl App {
@@ -67,6 +78,7 @@ impl App {
             show_help: false,
             diff_view_mode: 0,
             clipboard: Clipboard::new().ok(),
+            mode: Mode::Normal,
         }
     }
 

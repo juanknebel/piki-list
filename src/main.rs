@@ -6,7 +6,7 @@ mod operations;
 mod parser;
 mod ui;
 
-use app::App;
+use app::{App, Mode};
 use crossterm::{
     event::{DisableMouseCapture, EnableMouseCapture, KeyCode},
     execute,
@@ -14,6 +14,7 @@ use crossterm::{
 };
 use ratatui::{backend::CrosstermBackend, Terminal};
 use std::{env, fs, io, path::PathBuf};
+use tui_textarea::{CursorMove, Input};
 
 use crate::events::{is_alt_number, is_copy_paste_key, is_key, read_event, InputEvent};
 use crate::operations::{compare_lists, process_single_list};
@@ -22,7 +23,7 @@ use crate::ui::{
     create_layout_with_tabs, create_results_grid, render_list_panel, render_result_list_panel,
     render_results_panel, render_status_bar, render_tabs,
 };
-use tui_textarea::Input;
+// Use statement removed
 
 fn main() -> Result<(), io::Error> {
     // Setup terminal
@@ -237,6 +238,7 @@ fn main() -> Result<(), io::Error> {
                 convert_delims,
                 app.active_tab,
                 active_panel_info.as_deref(),
+                app.mode,
             );
 
             if app.show_help {
@@ -251,7 +253,11 @@ fn main() -> Result<(), io::Error> {
                 if app.show_help {
                     app.show_help = false;
                 } else if is_key(&key_event, KeyCode::Esc) {
-                    app.should_quit = true;
+                    if app.mode == Mode::Insert {
+                        app.mode = Mode::Normal;
+                    } else {
+                        app.should_quit = true;
+                    }
                 } else if is_key(&key_event, KeyCode::Char('?')) {
                     app.toggle_help();
                 } else if is_alt_number(&key_event, 1) {
@@ -347,12 +353,57 @@ fn main() -> Result<(), io::Error> {
                             app.results = vec![format!("Error copying: {}", e)];
                         }
                     }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('i')) {
+                    app.mode = Mode::Insert;
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('h')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::Back);
+                    }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('j')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::Down);
+                    }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('k')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::Up);
+                    }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('l')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::Forward);
+                    }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('w')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::WordForward);
+                    }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('b')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::WordBack);
+                    }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('0')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::Head);
+                    }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('$')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::End);
+                    }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('g')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::Top);
+                    }
+                } else if app.mode == Mode::Normal && is_key(&key_event, KeyCode::Char('G')) {
+                    if let Some(textarea) = app.active_textarea() {
+                        textarea.move_cursor(CursorMove::Bottom);
+                    }
                 } else {
                     // Pass other keys to the active textarea (Tab 1 and converter input)
-                    if app.active_tab == 0 || (app.active_tab == 2 && app.active_panel == 0) {
-                        if let Some(textarea) = app.active_textarea() {
-                            let input = Input::from(key_event);
-                            textarea.input(input);
+                    // only if in INSERT mode
+                    if app.mode == Mode::Insert {
+                        if app.active_tab == 0 || (app.active_tab == 2 && app.active_panel == 0) {
+                            if let Some(textarea) = app.active_textarea() {
+                                let input = Input::from(key_event);
+                                textarea.input(input);
+                            }
                         }
                     }
                 }

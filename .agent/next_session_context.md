@@ -12,10 +12,11 @@ The application has been significantly enhanced with JSON-to-CSV conversion, a n
     *   Added a git-style diff view to the Results tab (toggle with `F12`).
     *   Colors: Green for additions, Red for removals, Gray for common items.
 3.  **UI/UX Improvements**:
-    *   **Function Key Reorganization**: 
-        *   **F12** is now the primary action across all tabs (Compare / Toggle View / Convert).
-        *   **F10/F11** used for Source/Target delimiter cycling in Convert tab.
-    *   **Quit Shortcut**: Changed from `q` to `Esc` to prevent accidental exits.
+    *   **Vim Mode Implementation**:
+        *   Added **NORMAL**/**INSERT** modes.
+        *   Movement: `hjkl`, `wb`, `0$`, `gG` supported in Normal mode.
+        *   Switch with `i` (Insert) and `Esc` (Normal).
+    *   **Quit Shortcut**: Now only `Esc` in Normal mode exits the app.
     *   **INFO Panel**: Added a 4-line fixed panel at the bottom displaying context-aware hints.
     *   **Improved Visibility**: White text for editors ensures quotes and special characters are clearly visible.
 4.  **Stability**:

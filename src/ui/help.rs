@@ -25,9 +25,42 @@ pub fn render_help_modal(frame: &mut Frame) {
 
     let mut text = Vec::new();
 
+    // Section: Vim Mode
+    text.push(Line::from(vec![Span::styled(
+        "Vim Mode",
+        Style::default()
+            .add_modifier(Modifier::BOLD)
+            .fg(Color::Cyan),
+    )]));
+    text.push(Line::from(vec![
+        Span::styled("  i          ", Style::default().fg(Color::Yellow)),
+        Span::raw("Enter INSERT mode to type"),
+    ]));
+    text.push(Line::from(vec![
+        Span::styled("  Esc        ", Style::default().fg(Color::Yellow)),
+        Span::raw("Back to NORMAL mode (from Insert)"),
+    ]));
+    text.push(Line::from(vec![
+        Span::styled("  h, j, k, l ", Style::default().fg(Color::Yellow)),
+        Span::raw("Move cursor (Normal mode)"),
+    ]));
+    text.push(Line::from(vec![
+        Span::styled("  w, b       ", Style::default().fg(Color::Yellow)),
+        Span::raw("Move Word Forward / Back"),
+    ]));
+    text.push(Line::from(vec![
+        Span::styled("  0, $       ", Style::default().fg(Color::Yellow)),
+        Span::raw("Move to Line Start / End"),
+    ]));
+    text.push(Line::from(vec![
+        Span::styled("  g, G       ", Style::default().fg(Color::Yellow)),
+        Span::raw("Move to Top / Bottom of list"),
+    ]));
+    text.push(Line::from(""));
+
     // Section: Navigation
     text.push(Line::from(vec![Span::styled(
-        "Navigation",
+        "General Navigation",
         Style::default()
             .add_modifier(Modifier::BOLD)
             .fg(Color::Cyan),

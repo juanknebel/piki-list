@@ -11,6 +11,7 @@ A terminal-based application for manipulating and comparing lists of elements, b
 - **Sort Ascending (F6)** / **Sort Descending (F7)**: Smart sorting (numeric if all numbers, alphabetic otherwise). Replaces panel content.
 - **Trim & Dedup (F8)**: Remove whitespace and duplicates in one step. Replaces panel content.
 - **Compare lists (F12)**: Find differences and common elements between two lists.
+- **Vim Mode & Input Control**: Toggle between **NORMAL** (navigation) and **INSERT** (typing) modes using `i` and `Esc`.
 - **Copy to clipboard (Ctrl+C)**: Copy the entire content of the active panel to clipboard.
 
 ### Smart Numeric Sorting
@@ -112,6 +113,12 @@ The application uses a tabbed interface with three tabs:
 | `Alt+1/2/3` | Switch between Tabs (Input, Results, Convert) |
 | `Tab` | Cycle between panels within current tab |
 | `?` | Toggle Help Modal |
+| `i` | (Normal Mode) Enter **INSERT mode** |
+| `Esc` | (Insert) Return to **Normal Mode** \| (Normal) **Quit** the application |
+| `h, j, k, l` | (Normal Mode) Move cursor Left, Down, Up, Right |
+| `w, b` | (Normal Mode) Move Word Forward / Back |
+| `0, $` | (Normal Mode) Move cursor to Line Start / End |
+| `g, G` | (Normal Mode) Move cursor to Top / Bottom of list |
 | `Ctrl+C / Ctrl+V` | Copy / Paste (Cross-platform support) |
 | `F1` | Save active panel to file |
 | `F2` | Load file into active list (List 1, List 2, or Convert Input) |

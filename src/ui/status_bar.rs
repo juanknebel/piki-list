@@ -6,6 +6,7 @@ use ratatui::{
     Frame,
 };
 
+use crate::app::Mode;
 use crate::parser::Delimiter;
 
 /// Render the status bar at the bottom
@@ -22,6 +23,7 @@ pub fn render_status_bar(
     convert_delimiters: Option<(Delimiter, Delimiter)>,
     active_tab: usize,
     active_panel_info: Option<&str>,
+    mode: Mode,
 ) {
     let copy_label = if cfg!(target_os = "macos") {
         "Cmd+C/V"
@@ -40,7 +42,17 @@ pub fn render_status_bar(
         format!("Delim: {}", main_delimiter.display_name())
     };
 
+    let mode_label = match mode {
+        Mode::Normal => (" NORMAL ", Color::Cyan),
+        Mode::Insert => (" INSERT ", Color::Green),
+    };
+
     let mut spans = vec![
+        Span::styled(
+            mode_label.0,
+            Style::default().fg(Color::Black).bg(mode_label.1),
+        ),
+        Span::raw(" "),
         Span::styled(shortcuts, Style::default().fg(Color::White)),
         Span::raw(" | "),
         Span::styled(delim_info, Style::default().fg(Color::Yellow)),
